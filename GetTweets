@@ -1,0 +1,36 @@
+import tweepy
+import configparser
+import pandas as pd
+
+# read configs
+config = configparser.ConfigParser()
+config.read('config.ini')
+
+api_key = config['twitter']['api_key']
+api_key_secret = config['twitter']['api_key_secret']
+
+access_token = config['twitter']['access_token']
+access_token_secret = config['twitter']['access_token_secret']
+#bearer_token = config['twitter']['bearer_token']
+
+bearen = 'AAAAAAAAAAAAAAAAAAAAAK25cQEAAAAAPf6KFpWOE8J4%2BjwUaen1g4U%2BQdA%3DI56SaWSeNEjzd3D3MWBmLN7fDKE28jLg27YQ2KfH7R2lpHs3Js'
+
+#authentication
+streaming_client = tweepy.StreamingClient(bearen)
+
+#recherche
+resp = streaming_client.add_rules([
+    tweepy.StreamRule(value='#anime', tag='anime'),
+    tweepy.StreamRule(value='#bleach', tag='anime')    
+])
+
+print (resp)
+
+class IDPrinter(tweepy.StreamingClient):
+
+    def on_tweet(self, tweet):
+        print(tweet.id, tweet.text)
+
+
+printer = IDPrinter(bearen)
+printer.filter()
